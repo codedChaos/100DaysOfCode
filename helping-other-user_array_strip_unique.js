@@ -43,8 +43,9 @@ Explanation: Your function should return k = 2, with the first two elements of n
 are underscores). */
 //
 //
+log = function() { return console.log.apply(console, arguments); };
 
-const numarray = [1,1,2,2,3,4,5,6,7,7,8,8,9,10,11,11,11,12]; // test input array
+var numarray = [1,1,2,2,3,4,5,6,7,7,8,8,9,10,11,11,11,12]; // test input array
 
 /*var sliceSwap = function(nums, start, end) {
     // write function to shallow copy the array back into ascending order with NULL values
@@ -54,7 +55,7 @@ const numarray = [1,1,2,2,3,4,5,6,7,7,8,8,9,10,11,11,11,12]; // test input array
     //code goes here
     return numarray.slice(0, start) + numarrnumarray.slice(start, end);
 },*/
-var moveArrayChunk = function(arrN, start, remove, addons) {
+//var moveArrayChunk = function(arrN, start, addons) {
     /*  write function to use copyWithin to do an in-memory copy of chunks of the array
         to fill in gaps or blank array elements.
     
@@ -76,11 +77,11 @@ var moveArrayChunk = function(arrN, start, remove, addons) {
     */
     
     // my code
-    return (nums.slice());
-};
+    // arrN.splice(start, 0, addons);
+//};
 
 var removeDuplicates = function(nums) {
-  var count = 0;
+  count = 0;
 
 /*   for (var i = 0; i < nums.length; i++){
     if (nums[i + 1] === nums[i]) nums[i] = "";
@@ -103,25 +104,44 @@ var removeDuplicates = function(nums) {
   } */
 
   //my way of filtering O(1) memory footprint
-  var arrLen = nums.length;
-  for (var x = 0; x < arrLen; x++) {
-    if (x != '' && x != nums.lastIndexOf(nums[x])){
-        removeSteps = nums.lastIndexOf(nums[x]) - x;
-        while (removeSteps > 0) {
-            nums[x + removeSteps] = "";
-            removeSteps--;
-        }
-        moveArrayChunk(nums, x, nums.lastIndexOf(nums[x]))
+  arrLen = nums.length;
+
+  for (x = 0; x < arrLen; x++) {
+    log("x: " + x);
+
+    if (! isNaN(x) && x != nums.lastIndexOf(nums[x])){
+      log("inside if");
+
+      removals = nums.lastIndexOf(nums[x]) - x;
+      removeStepsCounter = removals;
+
+      log("removals: " + removals);
+      log("removeStepsCounter: " + removeStepsCounter);
+
+      do {        
+          
+        nums[x + removeStepsCounter] = "";
+        
+        log(nums, "removeStepsCounter: " + removeStepsCounter);
+          
+        removeStepsCounter--;
+        
+        log("removeStepsCounter after do: " + removeStepsCounter);
+        log("removals: " + removals);
+
+      } while (removeStepsCounter > 0);
+
     }
-    
+
+    count++;
   }
   
-  console.log(count, nums);
+  log("count: " + count + "\nnums: " + nums);
   return (count, nums);
 };
 
-console.log(numarray, "nums array");
+log(numarray, "nums array");
 
-var response = removeDuplicates(numarray);
+response = removeDuplicates(numarray);
 
-console.log(response);
+log(response, "response");
