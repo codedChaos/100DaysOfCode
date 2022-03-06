@@ -42,106 +42,54 @@ Explanation: Your function should return k = 2, with the first two elements of n
 1 and 2 respectively. It does not matter what you leave beyond the returned k (hence they 
 are underscores). */
 //
-//
+
+// laziness function to ease logging
 log = function() { return console.log.apply(console, arguments); };
 
-var numarray = [1,1,2,2,3,4,5,6,7,7,8,8,9,10,11,11,11,12]; // test input array
+// global variable container
+var ArrayStrip = {};
 
-/*var sliceSwap = function(nums, start, end) {
-    // write function to shallow copy the array back into ascending order with NULL values
-    // appended to the end of the array
-    // call function from removeDupplicates() function whenever spaces are created() {
-    
-    //code goes here
-    return numarray.slice(0, start) + numarrnumarray.slice(start, end);
-},*/
-//var moveArrayChunk = function(arrN, start, addons) {
-    /*  write function to use copyWithin to do an in-memory copy of chunks of the array
-        to fill in gaps or blank array elements.
-    
-        code a badass function
-    
-        PARAMETERS: Usage and examples
-        param nums - original array of number
-        param start [optional] - zero-based index to start copying elements from.
-                                 if negative, start will count backwards from the 
-                                 end of the array.'
-                                 
-                                 **If start is ommitted, copy will start from index 0.**
+// global attributes
+ArrayStrip.nums = [1,1,2,2,3,4,5,6,7,7,8,8,9,10,11,11,11,12];
+ArrayStrip.length = ArrayStrip.nums.length;
+ArrayStrip.removal = -1;  // start at -1 instead of zero to offset for array being zero indexed
 
-        param end [optional]   - zero-based index to end copying elements from. copyWithin
-                                 copies up to but not including the end. If negative, end
-                                 will be counted backwards from end of the array.
-    
-                                 **If end is ommitted, copy will end at last index of array.**
-    */
-    
-    // my code
-    // arrN.splice(start, 0, addons);
-//};
-
+// function to remove duplicate elements of array
 var removeDuplicates = function(nums) {
-  count = 0;
-
-/*   for (var i = 0; i < nums.length; i++){
-    if (nums[i + 1] === nums[i]) nums[i] = "";
-  }
-
-  for(var x = 0; x < nums.length; x++){
-    if (nums[x] === ''){
-      for (j = x; j < nums.length - x - 1; j++){
-        temp = nums[j];
-        nums[j] = nums[j+1];
-        nums[j+1] = temp;
-      }
-    }
-  }
-
-  var y = 0;
-  while(nums[y] != ""){
-    count++;
-    y++;
-  } */
-
   //my way of filtering O(1) memory footprint
-  arrLen = nums.length;
-
-  for (x = 0; x < arrLen; x++) {
-    log("x: " + x);
-
-    if (! isNaN(x) && x != nums.lastIndexOf(nums[x])){
-      log("inside if");
-
-      removals = nums.lastIndexOf(nums[x]) - x;
-      removeStepsCounter = removals;
-
-      log("removals: " + removals);
-      log("removeStepsCounter: " + removeStepsCounter);
-
-      do {        
-          
-        nums[x + removeStepsCounter] = "";
-        
-        log(nums, "removeStepsCounter: " + removeStepsCounter);
-          
+  for (x = 0; x < nums.length; x++) {
+    if (x != nums.lastIndexOf(nums[x])){
+      // declare variables to track removing duplicates
+      removal = nums.lastIndexOf(nums[x]) - x;
+      removeStepsCounter = removal;
+      
+      do {          
+        nums[x + removeStepsCounter] = "";  
         removeStepsCounter--;
-        
-        log("removeStepsCounter after do: " + removeStepsCounter);
-        log("removals: " + removals);
-
+        ArrayStrip.removal++;
       } while (removeStepsCounter > 0);
-
     }
-
-    count++;
   }
-  
-  log("count: " + count + "\nnums: " + nums);
-  return (count, nums);
+  // sort array nums to start and '' to end
+  nums.sort(function(a, b) {
+    if (a === '') {
+      a = Infinity;
+      // log("a = Infinity");
+    } else if (b === '') {
+      b = Infinity;
+      // log("b = Infinity");
+    }
+    if (a < b) {
+      return -1;
+    }
+    if (a > b) {
+      return 1;
+    }
+    return 0;
+  });
+  return ArrayStrip.nums;
 };
 
-log(numarray, "nums array");
+removeDuplicates(ArrayStrip.nums);
 
-response = removeDuplicates(numarray);
-
-log(response, "response");
+log(ArrayStrip.length - ArrayStrip.removal, ArrayStrip.nums);
